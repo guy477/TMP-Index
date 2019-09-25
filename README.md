@@ -3,10 +3,13 @@ Attempt to gauge the impact Trump's tweets have on the stock market.
 
 ## Update
 
-* Shifted gears and now will be making the app intended to run on my local system rather than with Google App Engine.
+* Twitter Stream up and running on Trumps Tweets.
+* The GCloud SQL DB might be set up; yet to use it/test it.
 
 ## ToDo
 
-* Get a twitter stream up and running.
-* Finish implementing storage class. Currently goal is to aggregate twitter data and store it in a gcloud database by twitter handle.
+* Filter out re-tweets
+* Filter out tweets that don't relate to the market, economy, or ongoing trade-wars.
+* Finish implementing storage class. Currently goal is to aggregate twitter data and store it in a GCloud DB by twitter handle.
+* Add a sentiment class to guage the sentiment of trumps tweets.
 
