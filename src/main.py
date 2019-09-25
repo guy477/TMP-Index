@@ -1,31 +1,20 @@
-from tweepy import Stream
-from tweepy import OAuthHandler
-from tweepy.streaming import StreamListener
-import json
+import storage
+import twData
 
-json.load(open('../credentials.json'))
-cred = json.load(open('../credentials.json'))
+def main():
+    db = storage.storage()
+    if db.connect():
+        tw = twData.twData()
+        tw.startStream()
+        #Donald Trump = 25073877
+        #Jim Cramer   = 14216123
+        #tw.filterFollow()
+        
+    
 
-
-
-#twitter api authentication
-auth = OAuthHandler(cred["API"], cred["API Secret"])
-auth.set_access_token(cred["Access"], "Access Secret")
-
-#twitterStream = Stream(auth, listener())
-
-
-class listener(StreamListener):
-
-    def on_data(self, data):
-        print(data)
-        return(True)
-
-    def on_error(self, status):
-        print(status)
-
-
-
+if __name__ == '__main__':
+    main()
+    
 
 #a = tweepy.StreamListener(cred['Twitter API Key'])
 #a.filter()
