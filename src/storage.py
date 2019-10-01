@@ -40,6 +40,9 @@ class storage:
         else:
             with self.cnx:
                 self.cur = self.cnx.cursor()
+                print("connected")
+            self.cur.execute("USE tmp_index;")
+            self.cnx.commit()
             return True
         return False
                 
@@ -53,14 +56,22 @@ class storage:
 
     
     def genQuery(self, query, verbose=False):
+        self.connect()
+        #self.cur.execute(query)
+        try:
+            self.cur.execute("USE {};".format(cred['CLOUD_SQL_DATABASE_NAME']))
+            self.cur.execute("CREATE TABLE IF NOT EXISTS tweet (tweet varchar(255));")
+            self.cnx.commit()
+        except:
+            print('failed to use db')
         try:
             self.cur.execute(query)
         except Exception:
             print("Error with query: " + query)
         else:
             self.cnx.commit()
-            result = self.cur.fetchall()
-            print(result)
+
+        self.closeDB
     
 
     def select(self, person):

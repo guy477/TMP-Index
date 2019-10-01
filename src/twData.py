@@ -12,7 +12,10 @@ cred = json.load(open('../credentials.json'))
 auth = tweepy.OAuthHandler(cred["API"], cred["API Secret"])
 auth.set_access_token(cred["Access"], cred["Access Secret"])
 
+store = storage.storage()
+store.connect()
 
+#store.genQuery("INSERT INTO test (hi)")
 
 class twData():
     myStreamListener = None
@@ -24,6 +27,8 @@ class twData():
         try:
             self.myStream = tweepy.Stream(auth=auth, listener = self.myStreamListener)
             self.myStream.filter(follow=['25073877'])
+            
+            
         except:
             print('Error starting tweepy Stream.')
             
@@ -38,8 +43,26 @@ class twData():
 #override tweepy.StreamListener to add logic to on_status
 class MyStreamListener(tweepy.StreamListener):
 
+    """
+    raw_data['user']['screen_name']
+	created_at = parser.parse(raw_data['created_at'])
+	tweet = raw_data['text']
+	retweet_count = raw_data['retweet_count']
+    """
+
     def on_status(self, status):
-        print(status.text)
+        
+        #print(status.created_at)
+        #print(status.user.screen_name)
+        print("_______________________________________________________")
+        
+        #self.myStream.filter(follow=['25073877'])
+        #store.genQuery("")
+        #store.genQuery("CREATE TABLE IF NOT EXISTS `tweet` (`tweet` varchar(255));")
+        #print()
+        if("RT" not in status.text[:2]):
+            print(status.text)
+            store.genQuery("INSERT INTO tweet (tweet) VALUES "+"(\'" + str(status.text).replace("\'|\"", "") +"\');")
     
     # on failure
     def on_error(self, status):
