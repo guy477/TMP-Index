@@ -5,6 +5,7 @@ Attempt to gauge the impact Trump's tweets have on the stock market.
 
 * Twitter Stream up and running on Trumps Tweets.
 * The GCloud SQL DB might be set up; yet to use it/test it.
+* Connected to DB and sucessfully executed queries
 
 ## ToDo
 
