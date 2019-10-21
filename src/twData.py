@@ -1,9 +1,13 @@
 import tweepy
 import json
+import re
+import requests
 import storage
+from datetime import datetime as dt
+from datetime import timedelta
 import pymysql
 
-json.load(open('../credentials.json'))
+#json.load(open('../credentials.json'))
 cred = json.load(open('../credentials.json'))
 
 
@@ -24,13 +28,17 @@ class twData():
         self.myStreamListener = MyStreamListener()
     
     def startStream(self):
-        try:
-            self.myStream = tweepy.Stream(auth=auth, listener = self.myStreamListener)
-            self.myStream.filter(follow=['25073877'])
-            
-            
-        except:
-            print('Error starting tweepy Stream.')
+        crash_counter = 0
+        while(1):
+            try:
+                self.myStream = tweepy.Stream(auth=auth, listener = self.myStreamListener)
+                self.myStream.filter(follow=['25073877'])
+                
+                
+            except:
+                crash_counter+=1
+                print(crash_counter)
+                continue
             
     """
     def filterTrack(self, track):
@@ -52,21 +60,30 @@ class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
         
-        #print(status.created_at)
-        #print(status.user.screen_name)
-        print("_______________________________________________________")
-        
-        #self.myStream.filter(follow=['25073877'])
-        #store.genQuery("")
-        #store.genQuery("CREATE TABLE IF NOT EXISTS `tweet` (`tweet` varchar(255));")
-        #print()
-        if("RT" not in status.text[:2]):
-            print(status.text)
-            store.genQuery("INSERT INTO tweet (tweet) VALUES "+"(\'" + str(status.text).replace("\'|\"", "") +"\');")
+        if('RT @' not in status.text and not status.retweeted ):
+            tweet = status.text.lower()
+            tweet = re.sub(r"[,.]", "", tweet)
+            print(tweet)
+            send_message(status, 'teehee')
+            print("++++++++++++++++++++")
+            store.genQuery("INSERT INTO tweet (tweet) VALUES "+"(\'" + tweet +"\');")
+        else:
+            pass
     
     # on failure
     def on_error(self, status):
         print(status)
+        
+    def send_message(self, status, action):
+        n = dt.now()
+        n = n - timedelta(microseconds=n.microsecond)
+        n = n.time()
+        print("sending message")
+        return requests.post("https://api.mailgun.net/v3/sandboxe081d808d2ae4d7994bef28c0cb47653.mailgun.org/messages",
+                             auth=("api", cred['mailgun']),
+                             data={"from": "TRADE NOTIFICATION<postmaster@sandboxe081d808d2ae4d7994bef28c0cb47653.mailgun.org>",
+                                   "to": "tmp.trade.notifier@gmail.com",
+                                   "subject": "Trump - {}".format(status.text),
+                                   "text": "Time: {}".format(status.created_at)})
 
 #twitterStream = Stream(auth, listener())
-
