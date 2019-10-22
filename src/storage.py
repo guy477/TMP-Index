@@ -1,6 +1,9 @@
 import json
 import pymysql
 import sqlalchemy
+import requests
+from datetime import datetime as dt
+from datetime import timedelta
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
 from sqlalchemy import inspect
 #gcloud database credentials
@@ -98,6 +101,18 @@ class storage:
             self.cnx.close()
         except:
             print('couldnt close db')
+    
+    def send_message(self, status, action):
+        n = dt.now()
+        n = n - timedelta(microseconds=n.microsecond)
+        n = n.time()
+        print("sending message")
+        return requests.post("https://api.mailgun.net/v3/"+cred['mailgunDomain']+"/messages",
+                                auth=("api", cred['mailgun']),
+                                data={"from": "TRADE NOTIFICATION<postmaster@"+cred['mailgunDomain']+".mailgun.org>",
+                                    "to": "tmp.trade.notifier@gmail.com",
+                                    "subject": "Trump - {}".format('N/A'), #Make this sentiment
+                                    "text": "Time: {}\nTweet: {}".format(status.created_at, status.text)})
     
     
     
