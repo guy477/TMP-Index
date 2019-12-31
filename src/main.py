@@ -8,6 +8,7 @@ def main():
         tw.startStream()
         #Donald Trump = 25073877
         #Jim Cramer   = 14216123
+        #AMD          = 14861876
         #tw.filterFollow()
         
     

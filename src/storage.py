@@ -111,7 +111,7 @@ class storage:
                                 auth=("api", cred['mailgun']),
                                 data={"from": "TRADE NOTIFICATION<postmaster@"+cred['mailgunDomain']+".mailgun.org>",
                                     "to": "tmp.trade.notifier@gmail.com",
-                                    "subject": "Trump - {}".format('N/A'), #Make this sentiment
+                                    "subject": "Trump ::: {}".format(action), #Make this sentiment
                                     "text": "Time: {}\nTweet: {}".format(status.created_at, status.text)})
     
     
