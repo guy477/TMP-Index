@@ -2,7 +2,7 @@
 Attempt to gauge the impact Trump's tweets have on the stock market.
 Currently Shows Twitter's Sentiment Toward Trump
 
-![Example](data\Capture.PNG)
+![Example](data/Capture.PNG)
 
 ## Update
 
