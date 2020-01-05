@@ -9,7 +9,7 @@ Currently Shows Twitter's Sentiment Toward Trump
 * Twitter Stream up and running on Trumps Tweets.
 * The GCloud SQL DB might be set up; yet to use it/test it.
 * Connected to (local) DB and sucessfully executed queries
-* Added ![MeaningCloud API](https://www.meaningcloud.com/developer/apis) for sentiment analysis.
+* Added [MeaningCloud API](https://www.meaningcloud.com/developer/apis) for sentiment analysis.
 
 ## ToDo
 
