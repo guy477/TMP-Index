@@ -31,7 +31,7 @@ class storage:
         self.db_password = cred['CLOUD_SQL_PASSWORD']
         self.db_name = cred['CLOUD_SQL_DATABASE_NAME']
         db_connection_name = cred['CLOUD_SQL_CONNECTION_NAME']
-
+        self.connect()
         #connect(db_user, db_password, db_name, db_connection_name)
 
     def connect(self):

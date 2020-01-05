@@ -2,11 +2,13 @@ import tweepy
 import json
 import re
 import requests
-import sent
+import sent, time
 import storage
 from datetime import datetime as dt
 from datetime import timedelta
 import pymysql
+import sched
+from threading import Thread
 
 #json.load(open('../credentials.json'))
 cred = json.load(open('../credentials.json'))
@@ -17,8 +19,12 @@ cred = json.load(open('../credentials.json'))
 auth = tweepy.OAuthHandler(cred["API"], cred["API Secret"])
 auth.set_access_token(cred["Access"], cred["Access Secret"])
 
-store = storage.storage()
-store.connect()
+
+
+store = storage
+thread = Thread(target=store.storage)
+thread.start()
+
 
 s = sent.Sentiment()
 
@@ -32,17 +38,22 @@ class twData:
     
     def startStream(self):
         crash_counter = 0
+        
+        s = sched.scheduler(time.time, time.sleep(10))
+        
         while(1):
-            #try:
+            try:
                 self.myStream = tweepy.Stream(auth=auth, listener = self.myStreamListener)
                 #self.myStream.filter(follow=['25073877']) ### TRUMP
-                self.myStream.filter(follow=['14861876', '25073877'])  ### AMD
+                self.myStream.filter(follow=['25073877'])  ### AMD
                 print('hi')
-            #except:
-            #    crash_counter+=1
-            #    print(crash_counter)
-            #    continue
-            
+            except:
+                crash_counter+=1
+                print(crash_counter)
+                continue
+
+    def timeHelper(self):
+        pass
     """
     def filterTrack(self, track):
         self.myStream.filter(track = track)
@@ -74,15 +85,9 @@ class MyStreamListener(tweepy.StreamListener):
                     vals[0].append(a)
                 
             
-            if('@realdonaldtrump' not in tweet and '@amd' not in tweet):
-                store.send_message(status, str(response))
-            
-            if('@amd' in tweet):
-                a = s.scoreToVal(response)
-                if(a != -2):
-                    vals[1].append(a)
             if((vals[0].__len__() % 50 == 0) and len(vals[0])!=0):
-                store.send_message(status, str(sum(vals[0])/len(vals[0])))
+                #store.send_message(status, str(sum(vals[0][len(vals[0])-50:])/50.))
+                vals[0] = vals[0][-25:]
             
             #store.genQuery("INSERT INTO tweet (tweet) VALUES "+"(\'" + tweet +"\');")
         

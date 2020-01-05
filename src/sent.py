@@ -8,15 +8,13 @@ import meaningcloud
 #print(cred)
 
 cred = json.load(open('../credentials.json'))
-a = meaningcloud.SentimentRequest(cred['sent-api'], lang='en', txt='inp', txtf='plain').sendReq()
-print(a)
 class Sentiment:
     
     def __init__(self):
         super().__init__()
         
     def sentiment(self, inp):
-        return meaningcloud.SentimentResponse(meaningcloud.SentimentRequest(cred['sent-api'], lang='en', txt=inp, txtf='plain').sendReq())
+        return meaningcloud.SentimentResponse(meaningcloud.SentimentRequest(cred['sent-api2'], lang='en', txt=inp, txtf='plain').sendReq())
 
     def scoreToVal(self, scoreTag):
         val = 0
